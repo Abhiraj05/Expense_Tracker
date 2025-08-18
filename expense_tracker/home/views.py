@@ -103,6 +103,7 @@ def create_expense(request):
         User_Expense.objects.create(
             expense_name=expense_name, expense_type=expense_type, amount=amount, user=id)
 
+        # requires check function(pending...)
         user_expense_records = User_Expense.objects.filter(user=id).all()
 
         for expense in user_expense_records:
@@ -113,6 +114,7 @@ def create_expense(request):
 
         total_amount = credit_amount-debit_amount
 
+        # requires check function(pending...)
         Total_Income.objects.create(user=id, total_income=total_amount)
 
         context = {"all_expenses": user_expense_records,
