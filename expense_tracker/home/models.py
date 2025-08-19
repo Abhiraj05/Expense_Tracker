@@ -16,12 +16,14 @@ class User_Expense(models.Model):
         ("Debit", "Debit")), default="Debit")
     amount= models.IntegerField(default=0)
     user = models.ForeignKey(User_Registration, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
+
+
 
 
 
 class Total_Income(models.Model):
     user = models.ForeignKey(User_Registration, on_delete=models.CASCADE)
     total_income = models.IntegerField(default=0)
-    
+
     

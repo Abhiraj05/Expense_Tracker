@@ -148,9 +148,11 @@ def create_expense(request):
             income_instance.save()
 
         return redirect("/user-expense/")
+    
+    income=user_income(user_id)
 
-    context = {"all_expenses": user_expense_records,
-               "total_amount": total_amount, "credit_amount": credit_amount, "debit_amount": debit_amount}
+    context = {"user":user.username,"all_expenses": user_expense_records,
+               "total_amount": income, "credit_amount": credit_amount, "debit_amount": debit_amount}
     return render(request, "main.html", context)
 
 
@@ -159,8 +161,17 @@ def delete_task(request, expense_id):
     if not user_id:
         messages.warning(request, "user not found please login again")
         return redirect("/login/")
+    
+    if user_income(user_id):
+        user_total_income = user_income(user_id)
+        debited_amount=User_Expense.objects.filter(id=expense_id, user=user_id).first()
+        total =user_total_income.total_income - debited_amount.amount
+        user_total_income.total_income=total
+        user_total_income.save()
+       
     User_Expense.objects.filter(id=expense_id, user=user_id).delete()
-    if user_expense(user_id):
+    
+    if not user_expense(user_id):
         user_total_income = user_income(user_id)
         user_total_income.total_income = 0
         user_total_income.save()

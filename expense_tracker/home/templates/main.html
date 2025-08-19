@@ -58,6 +58,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 mb-4 shadow-sm">
   <div class="w-100 d-flex justify-content-between align-items-center">
+    <span class="text-white me-3">Welcome, {{ user }}</span>
     {% comment %} {% if user %}
     <span class="text-white me-3">Welcome, {{ user }}</span>
     <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
@@ -94,8 +95,8 @@
           </div>
           <div class="mb-3">
             <label for="expenseamount" class="form-label fw-semibold"
-              >Enter amount </label
-            >
+              >Enter amount
+            </label>
             <input
               type="text"
               class="form-control"
@@ -106,7 +107,10 @@
           </div>
           <button type="submit" class="btn btn-primary w-100">Submit</button>
         </form>
-
+        <div class="center">
+          <h4>total expense</h4>
+          <h5>{{total_amount.total_income }}</h5>
+        </div>
         <div class="table-responsive">
           <table class="table table-bordered table-hover align-middle">
             <thead>
@@ -114,7 +118,7 @@
                 <th>expense name</th>
                 <th>type</th>
                 <th>amount</th>
-                <th>created at</th>
+                <th>date</th>
               </tr>
             </thead>
             <tbody>
