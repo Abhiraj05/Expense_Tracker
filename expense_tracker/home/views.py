@@ -90,8 +90,7 @@ def create_expense(request):
         messages.warning(request, "user not found please login again")
         return redirect("/login/")
 
-    # if not user_expense(user_id):
-    #         messages.warning(request, "no record found")
+
 
     if user_expense(user_id):
         user_expense_records = User_Expense.objects.filter(
