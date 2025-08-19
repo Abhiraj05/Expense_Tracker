@@ -20,9 +20,9 @@ def user_expense(id):
     return userex
 
 
-def user_income(id, total_amount):
+def user_income(id):
     userin = Total_Income.objects.filter(
-        user=id, total_income=total_amount).first()
+        user=id).first()
     return userin
 
 
@@ -57,37 +57,45 @@ def user_login(request):
 
         if value_check(username):
             messages.warning(request, "please enter the username")
-            return redirect("/")
+            return redirect("/login/")
 
         if value_check(password):
             messages.warning(request, "please enter the username")
-            return redirect("/")
+            return redirect("/login/")
 
         user = user_exist(username, password)
         if not user:
             messages.warning(request, "user not register")
-            return redirect("/")
+            return redirect("/login/")
         else:
             request.session['user_id'] = user.id
             messages.success(request, "user logged in successfully")
-            return redirect("/")
+            return redirect("/user-expense/")
     return render(request, "signin.html")
 
 
 def create_expense(request):
-    id = request.session.get('user_id')
-    expense_type
+    user_id = request.session.get('user_id')
     total_amount = 0
     credit_amount = 0
     debit_amount = 0
-    if not id:
+    expense_type = "Debit"
+    user_expense_records = ''
+    if not user_id:
         messages.warning(request, "user not found please login again")
-        return redirect("/")
+        return redirect("/login/")
 
-    user = User_Registration.objects.filter(id=id).first()
+    user = User_Registration.objects.filter(id=user_id).first()
     if not user:
         messages.warning(request, "user not found please login again")
-        return redirect("/")
+        return redirect("/login/")
+
+    # if not user_expense(user_id):
+    #         messages.warning(request, "no record found")
+
+    if user_expense(user_id):
+        user_expense_records = User_Expense.objects.filter(
+            user=user_id).all()
 
     if request.method == "POST":
         expense_name = request.POST.get("expensename")
@@ -95,26 +103,30 @@ def create_expense(request):
 
         if value_check(expense_name):
             messages.warning(request, "please enter the expense name")
-            return redirect("/")
+            return redirect("/user-expense/")
 
         if value_check(amount):
             messages.warning(request, "please enter the amount")
-            return redirect("/")
+            return redirect("/user-expense/")
 
         if int(amount) < 0:
             expense_type = "Debit"
         else:
             expense_type = "Credit"
 
-        User_Expense.objects.create(
-            expense_name=expense_name, expense_type=expense_type, amount=amount, user=id)
-
-        # requires check function(pending...)
-        if not user_expense(id):
+        user_instance = User_Registration.objects.filter(id=user_id).first()
+        if not user_instance:
             messages.warning(request, "no record found")
-            return redirect("/")
-        else:
-            user_expense_records = User_Expense.objects.filter(user=id).all()
+            return redirect("/user-expense/")
+
+        if user_instance:
+            User_Expense.objects.create(
+                expense_name=expense_name, expense_type=expense_type, amount=amount, user=user_instance)
+            messages.success(request, "expense created successfully")
+
+        if user_expense(user_id):
+            user_expense_records = User_Expense.objects.filter(
+                user=user_id).all()
 
         for expense in user_expense_records:
             if expense.expense_type == "Credit":
@@ -124,13 +136,33 @@ def create_expense(request):
 
         total_amount = credit_amount-debit_amount
 
-        # requires check function(pending...)
-        if not user_income(id, total_amount):
-            Total_Income.objects.create(user=id, total_income=total_amount)
+        user_total_income = user_income(user_id)
+        if not user_total_income:
+            user_instance = User_Registration.objects.filter(
+                id=user_id).first()
+            Total_Income.objects.create(
+                user=user_instance, total_income=total_amount)
         else:
-            Total_Income.total_income = total_amount
+            income_instance = user_total_income
+            income_instance.total_income = total_amount
+            income_instance.save()
 
-        context = {"all_expenses": user_expense_records,
-                   "total_amount": total_amount, "credit_amount": credit_amount, "debit_amount": debit_amount}
+        return redirect("/user-expense/")
 
-        return render(request, "", context)
+    context = {"all_expenses": user_expense_records,
+               "total_amount": total_amount, "credit_amount": credit_amount, "debit_amount": debit_amount}
+    return render(request, "main.html", context)
+
+
+def delete_task(request, expense_id):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        messages.warning(request, "user not found please login again")
+        return redirect("/login/")
+    User_Expense.objects.filter(id=expense_id, user=user_id).delete()
+    if user_expense(user_id):
+        user_total_income = user_income(user_id)
+        user_total_income.total_income = 0
+        user_total_income.save()
+    messages.success(request, "expense deleted successfully")
+    return redirect("/user-expense/")

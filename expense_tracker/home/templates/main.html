@@ -1,0 +1,144 @@
+{% extends "base.html" %} {% block start %}
+
+<style>
+  body {
+    background-color: #6a6b6dff;
+  }
+
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  table th,
+  table td {
+    padding: 12px;
+    text-align: left;
+  }
+
+  table thead th {
+    background-color: #343a40;
+    color: white;
+  }
+
+  table tbody tr:nth-child(even) {
+    background-color: #343a40;
+  }
+
+  table tbody tr:hover {
+    background-color: #343a40;
+
+    transition: 0.2s;
+  }
+
+  .bg-success {
+    background-color: #f3df27ff !important;
+  }
+  .bg-unmarked {
+    background-color: #2865a7ff !important;
+  }
+  .bg-delete {
+    background-color: #ff2b59ff !important;
+  }
+  .mb-6 {
+    margin-bottom: 60px;
+  }
+  .center {
+    text-align: center;
+    font-weight: bold;
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 mb-4 shadow-sm">
+  <div class="w-100 d-flex justify-content-between align-items-center">
+    {% comment %} {% if user %}
+    <span class="text-white me-3">Welcome, {{ user }}</span>
+    <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
+    {% else %}
+    <a href="" class="btn btn-outline-light btn-sm">Login</a>
+    {% endif %} {% endcomment %}
+  </div>
+</nav>
+
+<div class="container mt-6">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+      <div class="card p-4 mt-5 mb-5">
+        <div class="center">
+          <h2>expense tracker</h2>
+        </div>
+        {% if messages %} {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+        {% endfor %} {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="mb-4">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="expensename" class="form-label fw-semibold"
+              >Enter Expense Name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              name="expensename"
+              id="expensename"
+              placeholder="E.g., House Loan"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="expenseamount" class="form-label fw-semibold"
+              >Enter amount </label
+            >
+            <input
+              type="text"
+              class="form-control"
+              name="amount"
+              id="expenseamount"
+              placeholder="E.g., Credit = 3000 & Debit = -3000"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle">
+            <thead>
+              <tr>
+                <th>expense name</th>
+                <th>type</th>
+                <th>amount</th>
+                <th>created at</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for eachrecord in all_expenses %}
+              <tr>
+                <td>{{eachrecord.expense_name}}</td>
+                <td>{{eachrecord.expense_type }}</td>
+                <td>{{eachrecord.amount}}</td>
+                <td>{{eachrecord.created_at}}</td>
+                <td>
+                  <a
+                    href="{% url 'delete_task' eachrecord.id %}"
+                    class="badge bg-delete text-decoration-none"
+                    >delete</a
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
