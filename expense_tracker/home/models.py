@@ -19,11 +19,7 @@ class User_Expense(models.Model):
     created_at = models.DateField(auto_now_add=True)
 
 
-
-
-
 class Total_Income(models.Model):
     user = models.ForeignKey(User_Registration, on_delete=models.CASCADE)
     total_income = models.IntegerField(default=0)
-
     
