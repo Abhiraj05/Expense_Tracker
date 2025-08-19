@@ -177,3 +177,7 @@ def delete_task(request, expense_id):
         user_total_income.save()
     messages.success(request, "expense deleted successfully")
     return redirect("/user-expense/")
+
+def logout(request):
+    request.session.flush()
+    return redirect('/login/')
