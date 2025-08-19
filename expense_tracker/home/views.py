@@ -20,6 +20,12 @@ def user_expense(id):
     return userex
 
 
+def user_income(id, total_amount):
+    userin = Total_Income.objects.filter(
+        user=id, total_income=total_amount).first()
+    return userin
+
+
 def user_register(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -41,7 +47,7 @@ def user_register(request):
         else:
             messages.warning(request, "user already exist")
             return redirect("/")
-    return render(request, "")
+    return render(request, "signup.html")
 
 
 def user_login(request):
@@ -65,7 +71,7 @@ def user_login(request):
             request.session['user_id'] = user.id
             messages.success(request, "user logged in successfully")
             return redirect("/")
-    return render(request, "")
+    return render(request, "signin.html")
 
 
 def create_expense(request):
@@ -104,7 +110,11 @@ def create_expense(request):
             expense_name=expense_name, expense_type=expense_type, amount=amount, user=id)
 
         # requires check function(pending...)
-        user_expense_records = User_Expense.objects.filter(user=id).all()
+        if not user_expense(id):
+            messages.warning(request, "no record found")
+            return redirect("/")
+        else:
+            user_expense_records = User_Expense.objects.filter(user=id).all()
 
         for expense in user_expense_records:
             if expense.expense_type == "Credit":
@@ -115,7 +125,10 @@ def create_expense(request):
         total_amount = credit_amount-debit_amount
 
         # requires check function(pending...)
-        Total_Income.objects.create(user=id, total_income=total_amount)
+        if not user_income(id, total_amount):
+            Total_Income.objects.create(user=id, total_income=total_amount)
+        else:
+            Total_Income.total_income = total_amount
 
         context = {"all_expenses": user_expense_records,
                    "total_amount": total_amount, "credit_amount": credit_amount, "debit_amount": debit_amount}
