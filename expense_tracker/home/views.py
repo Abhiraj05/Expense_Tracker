@@ -77,8 +77,8 @@ def user_login(request):
 def create_expense(request):
     user_id = request.session.get('user_id')
     total_amount = 0
-    credit_amount = 0
-    debit_amount = 0
+    cal_credit_amount = 0
+    cal_debit_amount = 0
     expense_type = "Debit"
     user_expense_records = ''
     if not user_id:
@@ -130,21 +130,24 @@ def create_expense(request):
 
         for expense in user_expense_records:
             if expense.expense_type == "Credit":
-                credit_amount += int(expense.amount)
+               cal_credit_amount += int(expense.amount)
             else:
-                debit_amount -= int(expense.amount)
-
-        total_amount = credit_amount-debit_amount
+                cal_debit_amount -= int(expense.amount)
+        
+        
+        total_amount = cal_credit_amount-cal_debit_amount
 
         user_total_income = user_income(user_id)
         if not user_total_income:
             user_instance = User_Registration.objects.filter(
                 id=user_id).first()
             Total_Income.objects.create(
-                user=user_instance, total_income=total_amount)
+                user=user_instance, total_income=total_amount,credit_amount=cal_credit_amount,debit_amount=cal_debit_amount)
         else:
             income_instance = user_total_income
             income_instance.total_income = total_amount
+            income_instance.credit_amount=cal_credit_amount
+            income_instance.debit_amount=cal_debit_amount
             income_instance.save()
 
         return redirect("/user-expense/")
@@ -152,7 +155,7 @@ def create_expense(request):
     income=user_income(user_id)
 
     context = {"user":user.username,"all_expenses": user_expense_records,
-               "total_amount": income, "credit_amount": credit_amount, "debit_amount": debit_amount}
+               "total_amount": income}
     return render(request, "main.html", context)
 
 
@@ -166,6 +169,13 @@ def delete_task(request, expense_id):
         user_total_income = user_income(user_id)
         debited_amount=User_Expense.objects.filter(id=expense_id, user=user_id).first()
         total =user_total_income.total_income - debited_amount.amount
+        if debited_amount.expense_type=="Credit":
+            camount=user_total_income.credit_amount-debited_amount.amount
+            user_total_income.credit_amount=camount
+        else:
+            damount=user_total_income.debit_amount-debited_amount.amount
+            user_total_income.debit_amount=damount
+            
         user_total_income.total_income=total
         user_total_income.save()
        
@@ -174,6 +184,9 @@ def delete_task(request, expense_id):
     if not user_expense(user_id):
         user_total_income = user_income(user_id)
         user_total_income.total_income = 0
+        user_total_income.credit_amount = 0
+        user_total_income.debit_amount = 0
+        
         user_total_income.save()
     messages.success(request, "expense deleted successfully")
     return redirect("/user-expense/")

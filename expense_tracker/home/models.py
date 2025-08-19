@@ -25,5 +25,8 @@ class User_Expense(models.Model):
 class Total_Income(models.Model):
     user = models.ForeignKey(User_Registration, on_delete=models.CASCADE)
     total_income = models.IntegerField(default=0)
+    credit_amount = models.IntegerField(default=0)
+    debit_amount = models.IntegerField(default=0)
+    
     
     
