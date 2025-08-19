@@ -1,62 +1,190 @@
-{% extends "base.html" %} {% block start %}
+{% extends "base.html" %}
+{% block start %}
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
   body {
-    background-color: #6a6b6dff;
+    background: linear-gradient(135deg, #3c3c3c, #1e1e1e);
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    min-height: 100vh;
   }
+
+
+  .navbar {
+    background: linear-gradient(90deg, #1a1a1a, #3a3a3a);
+    
+  }
+
 
   .card {
     border: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    background: #161616;
+  }
+
+
+  .form-label {
+    font-weight: 600;
+    color: #f3df27;
+  }
+
+  .form-control {
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: none;
+    background: #222;
+    color: #fff;
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
+ 
+  input.form-control::placeholder,
+  textarea.form-control::placeholder {
+    color: #bdbabaff !important;
+    opacity: 1;
+  }
+  :-ms-input-placeholder { color: #bdbabaff !important; }   /* IE 10-11 */
+  ::-ms-input-placeholder { color: #bdbabaff !important; } /* Old Edge */
+
+  .form-control:focus {
+    border: 2px solid #f3df27;
+    box-shadow: none;
+    background: #1e1e1e;
+    color: #fff;
   }
 
-  table th,
-  table td {
-    padding: 12px;
-    text-align: left;
+
+  .btn-custom {
+    background: linear-gradient(90deg, #f3df27, #d9b800);
+    color: #161616;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    transition: 0.3s;
   }
 
-  table thead th {
-    background-color: #343a40;
-    color: white;
+  .btn-custom:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
   }
 
-  table tbody tr:nth-child(even) {
-    background-color: #343a40;
+
+  .summary-box {
+    border-radius: 16px;
+    padding: 16px 22px;
+    text-align: center;
+    font-weight: 600;
+    min-width: 120px;
+    background: #161616;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: 0.3s;
   }
 
-  table tbody tr:hover {
-    background-color: #343a40;
-
-    transition: 0.2s;
+  .summary-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.6);
   }
 
-  .bg-success {
-    background-color: #f3df27ff !important;
+  .summary-credit {
+    border: 2px solid #4285f4;
+    color: #4285f4;
   }
-  .bg-unmarked {
-    background-color: #2865a7ff !important;
+
+  .summary-total {
+    border: 2px solid #f3df27;
+    color: #f3df27;
   }
+
+  .summary-debit {
+    border: 2px solid #ff4444;
+    color: #ff4444;
+  }
+
+  .summary-box p {
+    margin: 0;
+    font-size: 15px;
+  }
+
+  .summary-box p:last-child {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+
+  table.table {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+table.table thead th {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+table.table tbody tr {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+
+table.table tbody tr:nth-child(even) {
+  background: #111 !important;
+}
+
+
+table.table tbody tr:hover {
+  background: #222 !important;
+}
+
+
+
   .bg-delete {
-    background-color: #ff2b59ff !important;
+    background: #FFD700 !important;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-weight: 700;
+    color: #161616 !important;
+    transition: 0.3s;
   }
-  .mb-6 {
-    margin-bottom: 60px;
+
+  .bg-delete:hover {
+    background: #e6c200 !important;
+    color: #000 !important;
   }
+
+
+  .bg-color {
+    color: #f3df27 !important;
+  }
+
   .center {
     text-align: center;
     font-weight: bold;
   }
+
+
+  @media (max-width: 768px) {
+    .summary-box {
+      padding: 12px 16px !important;
+      width: 100%;
+      max-width: 220px;
+      margin: 0 auto 10px;
+    }
+
+    table thead {
+      font-size: 12px;
+    }
+
+    table td {
+      font-size: 13px;
+    }
+  }
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 mb-4 shadow-sm">
+
+<nav class="navbar navbar-expand-lg navbar-dark px-4 mb-4 shadow-sm">
   <div class="w-100 d-flex justify-content-between align-items-center">
     {% if user %}
     <span class="text-white me-3">Welcome, {{ user }}</span>
@@ -67,88 +195,86 @@
   </div>
 </nav>
 
-<div class="container mt-6">
+
+<div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-12 col-sm-10 col-md-8 col-lg-6">
-      <div class="card p-4 mt-5 mb-5">
-        <div class="center">
-          <h2>expense tracker</h2>
+      <div class="card p-4 mt-3 mb-5">
+        <div class="center mb-3">
+          <h2 class="bg-color">Expense Tracker</h2>
         </div>
-        {% if messages %} {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
-        {% endfor %} {% endif %}
 
-        <form method="POST" enctype="multipart/form-data" class="mb-4">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="mt-4 mb-4">
           {% csrf_token %}
           <div class="mb-3">
-            <label for="expensename" class="form-label fw-semibold"
-              >Enter Expense Name</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              name="expensename"
-              id="expensename"
-              placeholder="E.g., House Loan"
-            />
+            <label for="expensename" class="form-label">Enter Expense Name</label>
+            <input type="text" class="form-control" name="expensename" id="expensename" placeholder="E.g., House Loan" />
           </div>
           <div class="mb-3">
-            <label for="expenseamount" class="form-label fw-semibold"
-              >Enter amount
-            </label>
-            <input
-              type="text"
-              class="form-control"
-              name="amount"
-              id="expenseamount"
-              placeholder="E.g., Credit = 3000 & Debit = -3000"
-            />
+            <label for="expenseamount" class="form-label">Enter Amount</label>
+            <input type="text" class="form-control" name="amount" id="expenseamount" placeholder="E.g., Credit = 3000 or Debit = -3000" />
           </div>
-          <button type="submit" class="btn btn-primary w-100">Submit</button>
+          <button type="submit" class="btn btn-custom w-100 mt-2 text-capitalize">add expense</button>
         </form>
-        <div class="center">
-          <div>
-            <h4>credited amount</h4>
-            <h5>{{total_amount.credit_amount }}</h5>
+
+ 
+        <div class="center d-flex flex-wrap justify-content-center text-white gap-3">
+          <div class="summary-box summary-credit px-5">
+            <p>Credited</p>
+            <p>{{ total_amount.credit_amount }}</p>
           </div>
-          <div>
-            <h4>total expense</h4>
-            <h5>{{total_amount.total_income }}</h5>
+          <div class="summary-box summary-total px-5">
+            <p>Total</p>
+            <p>{{ total_amount.total_income }}</p>
           </div>
-          <div>
-            <h4c>debited amount</h4>
-            <h5>{{total_amount.debit_amount }}</h5>
+          <div class="summary-box summary-debit px-5">
+            <p>Debited</p>
+            <p>{{ total_amount.debit_amount }}</p>
           </div>
         </div>
-        <div class="table-responsive">
-          <table class="table table-bordered table-hover align-middle">
+
+   
+        <div class="table-responsive mt-4">
+          <table class="table table-hover align-middle">
             <thead>
               <tr>
-                <th>expense name</th>
-                <th>type</th>
-                <th>amount</th>
-                <th>date</th>
+                <th>Expense Name</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {% for eachrecord in all_expenses %}
               <tr>
-                <td>{{eachrecord.expense_name}}</td>
-                <td>{{eachrecord.expense_type }}</td>
-                <td>{{eachrecord.amount}}</td>
-                <td>{{eachrecord.created_at}}</td>
+                <td>{{ eachrecord.expense_name }}</td>
                 <td>
-                  <a
-                    href="{% url 'delete_task' eachrecord.id %}"
-                    class="badge bg-delete text-decoration-none"
-                    >delete</a
-                  >
+                  <span class="badge {% if eachrecord.expense_type == 'Credit' %}bg-success{% else %}bg-danger{% endif %}">
+                    {{ eachrecord.expense_type }}
+                  </span>
                 </td>
+                <td>{{ eachrecord.amount }}</td>
+                <td>{{ eachrecord.created_at }}</td>
+                <td>
+                  <a href="{% url 'delete_task' eachrecord.id %}" class="badge bg-delete text-decoration-none">Delete</a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center text-muted">No expenses recorded yet.</td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
+
       </div>
     </div>
   </div>

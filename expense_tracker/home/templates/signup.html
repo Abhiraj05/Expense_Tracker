@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block start %}
+{% extends "base.html" %}
+{% block start %}
 
 <style>
   body {
@@ -8,28 +9,77 @@
   .card {
     border-radius: 12px;
     border: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background-color: #1f1f1f; /* Light black card */
+    color: white; /* White font */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
 
   h3 {
     font-weight: 600;
     margin-bottom: 20px;
     text-align: center;
+    color: #FFD700; /* Gold heading */
   }
+
+  label {
+    color: white;
+    font-weight: 500;
+  }
+
+  input.form-control {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+  }
+
+  input.form-control:focus {
+    background-color: #444;
+    color: white;
+    border-color: #FFD700;
+    box-shadow: 0 0 5px #FFD700;
+  }
+
   .mt-6 {
     margin-top: 60px;
   }
+
+  .btn-primary {
+    background-color: #FFD700;
+    border: none;
+    color: black;
+    font-weight: bold;
+  }
+
+  .btn-primary:hover {
+    background-color: #e6c200;
+  }
+
+  a {
+    color: #FFD700;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+    .form-control::placeholder {
+    color: #bdbabaff ;
+    opacity: 1;
+  }
+
 </style>
 
 <div class="container mt-6">
   <div class="row justify-content-center">
     <div class="col-12 col-sm-10 col-md-8 col-lg-6">
       <div class="card p-4 mt-5 mb-5">
-        {% if messages %} {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}" role="alert">
-          {{ message }}
-        </div>
-        {% endfor %} {% endif %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
 
         <form method="POST" enctype="multipart/form-data">
           {% csrf_token %}
@@ -43,6 +93,7 @@
               name="username"
               id="username"
               placeholder="Username"
+              required
             />
           </div>
 
@@ -52,32 +103,38 @@
               type="password"
               class="form-control"
               name="password"
-              id="check"
+              id="password"
               placeholder="Password"
+              required
             />
           </div>
+
+ 
+
           <div class="mt-2 mb-4">
-            <input type="checkbox" id="check" onclick="make_visible()" /><span>
-              show the password</span
-            >
+            <input type="checkbox" id="showPassword" onclick="make_visible()" />
+            <span> Show the password</span>
           </div>
+
           <button type="submit" class="btn btn-primary w-100">Sign Up</button>
         </form>
+
         <div class="d-flex justify-content-center mt-3 gap-2">
-          <p>already have an account</p>
-          <a href="/login">login</a>
+          <p>Already have an account?</p>
+          <a href="/login">Login</a>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script>
   function make_visible() {
-    value = document.getElementById("check");
-    if (value.type == "password") {
-      value.type = "text";
+    let passwordField = document.getElementById("password");
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
     } else {
-      value.type = "password";
+      passwordField.type = "password";
     }
   }
 </script>
