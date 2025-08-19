@@ -173,7 +173,7 @@ def delete_task(request, expense_id):
             camount=user_total_income.credit_amount-debited_amount.amount
             user_total_income.credit_amount=camount
         else:
-            damount=user_total_income.debit_amount-debited_amount.amount
+            damount=user_total_income.debit_amount+debited_amount.amount
             user_total_income.debit_amount=damount
             
         user_total_income.total_income=total
