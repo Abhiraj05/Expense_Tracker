@@ -63,7 +63,7 @@
     <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
     {% else %}
     <a href="" class="btn btn-outline-light btn-sm">Login</a>
-    {% endif %} 
+    {% endif %}
   </div>
 </nav>
 
@@ -107,8 +107,18 @@
           <button type="submit" class="btn btn-primary w-100">Submit</button>
         </form>
         <div class="center">
-          <h4>total expense</h4>
-          <h5>{{total_amount.total_income }}</h5>
+          <div>
+            <h4>credited amount</h4>
+            <h5>{{total_amount.credit_amount }}</h5>
+          </div>
+          <div>
+            <h4>total expense</h4>
+            <h5>{{total_amount.total_income }}</h5>
+          </div>
+          <div>
+            <h4c>debited amount</h4>
+            <h5>{{total_amount.debit_amount }}</h5>
+          </div>
         </div>
         <div class="table-responsive">
           <table class="table table-bordered table-hover align-middle">
