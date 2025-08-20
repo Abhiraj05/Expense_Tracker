@@ -30,14 +30,21 @@ def user_register(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
+        confirm_password = request.POST.get("confirmpassword")
+        
 
         if value_check(username):
             messages.warning(request, "please enter the username")
             return redirect("/")
 
         if value_check(password):
-            messages.warning(request, "please enter the username")
+            messages.warning(request, "please enter the password")
             return redirect("/")
+        
+        if password!=confirm_password:
+            messages.warning(request, "password is not matching")
+            return redirect("/")
+
 
         if not user_exist(username, password):
             User_Registration.objects.create(

@@ -2,15 +2,13 @@
 {% block start %}
 
 <style>
-  body {
-    background-color: #6a6b6dff;
-  }
+
 
   .card {
     border-radius: 12px;
     border: none;
-    background-color: #1f1f1f; /* Light black card */
-    color: white; /* White font */
+    background-color: #1f1f1f; 
+    color: white; 
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
 
@@ -18,7 +16,7 @@
     font-weight: 600;
     margin-bottom: 20px;
     text-align: center;
-    color: #FFD700; /* Gold heading */
+    color: #FFD700; 
   }
 
   label {
@@ -109,7 +107,17 @@
             />
           </div>
 
- 
+  <div class="mb-3">
+            <label for="password" class="form-label">Re-enter Password</label>
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              id="confirmpassword"
+              placeholder="Confirm Password"
+              required
+            />
+          </div>
 
           <div class="mt-2 mb-4">
             <input type="checkbox" id="showPassword" onclick="make_visible()" />
