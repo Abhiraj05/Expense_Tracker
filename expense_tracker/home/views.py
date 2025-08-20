@@ -67,7 +67,7 @@ def user_login(request):
             return redirect("/login/")
 
         if value_check(password):
-            messages.warning(request, "please enter the username")
+            messages.warning(request, "please enter the password")
             return redirect("/login/")
 
         user = user_exist(username, password)
