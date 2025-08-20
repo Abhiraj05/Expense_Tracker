@@ -18,5 +18,5 @@ A simple and secure web application to manage your daily expenses.
 ---
 
 ##  Project Link
-abhirajshilkar.pythonanywhere.com
+https://abhirajshilkar.pythonanywhere.com
 
