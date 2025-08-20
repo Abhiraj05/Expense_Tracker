@@ -4,35 +4,42 @@ from home.models import User_Registration, User_Expense, Total_Income
 
 # Create your views here.
 
-
+# this function checks whether user have enter value in input box or not
 def value_check(value):
     return value is None or value == ""
 
 
+
+# this function checks user have register or not
 def user_exist(username, password):
     user = User_Registration.objects.filter(
         username=username, password=password).first()
     return user
 
 
+
+# this function checks user have expenses or not
 def user_expense(id):
     userex = User_Expense.objects.filter(user=id).first()
     return userex
 
 
+
+# this function checks user have income or not
 def user_income(id):
     userin = Total_Income.objects.filter(
         user=id).first()
     return userin
 
 
+
+# this function registers new user
 def user_register(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirmpassword")
         
-
         if value_check(username):
             messages.warning(request, "please enter the username")
             return redirect("/")
@@ -57,6 +64,8 @@ def user_register(request):
     return render(request, "signup.html")
 
 
+
+# this function checks user have register or not
 def user_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -81,6 +90,8 @@ def user_login(request):
     return render(request, "signin.html")
 
 
+
+# this function creates expense and display all the expenses on screen
 def create_expense(request):
     user_id = request.session.get('user_id')
     total_amount = 0
@@ -96,8 +107,6 @@ def create_expense(request):
     if not user:
         messages.warning(request, "user not found please login again")
         return redirect("/login/")
-
-
 
     if user_expense(user_id):
         user_expense_records = User_Expense.objects.filter(
@@ -165,6 +174,8 @@ def create_expense(request):
     return render(request, "main.html", context)
 
 
+
+# this function delete the specific tasks as true when task is deleted
 def delete_task(request, expense_id):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -197,6 +208,9 @@ def delete_task(request, expense_id):
     messages.success(request, "expense deleted successfully")
     return redirect("/user-expense/")
 
+
+
+# this function redirect to login page
 def logout(request):
     request.session.flush()
     return redirect('/login/')
